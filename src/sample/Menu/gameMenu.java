@@ -1,40 +1,34 @@
 package sample.Menu;
 
+import java.io.IOException;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.effect.GaussianBlur;
-import javafx.scene.image.Image;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import sample.Menu.menuElements.background;
+import sample.Menu.menuElements.menuItem;
 
 public class gameMenu {
-
-    private static final Font FONT = Font.font("", FontWeight.BOLD, 27);
 
     public VBox menuBox;
     private int currentItem;
 	private Group root;
+	private background backgroundRendered;
 	
 	public EventHandler<KeyEvent> changeItemHandler;
 
-	/**
-	 * Constructor
-	 */
-	 
-    public gameMenu(Group root, Color back, Color obst, Color cook)
+	//Constructor
+    public gameMenu(Group root)
     {
     	this.root = root;
     	this.currentItem = 0;
     	this.menuBox = new VBox();
+    	
+    	backgroundRendered = new background();
+    	this.setBackground();
     	
     	changeItemHandler = new EventHandler<KeyEvent>() {  
             public void handle(KeyEvent event) { 
@@ -43,21 +37,28 @@ public class gameMenu {
         };
     }
     
-    /**
-     * Create Menu
+    /*
+     * FUNCTIONS
      */
     
+    //Function to create a menu
     public void createMenu(Group root) {
-        MenuItem startGame = new MenuItem("PLAY");
+        menuItem startGame = new menuItem("PLAY");
         startGame.setOnActivate(() -> this.runGame());
         
-        MenuItem options = new MenuItem("OPTIONS");
+        menuItem options = new menuItem("OPTIONS");
         options.setOnActivate(() -> this.openOptions());
         
-        MenuItem leaderboard = new MenuItem("LEADERBOARD");
-        leaderboard.setOnActivate(() -> this.openLeaderboard());
+        menuItem leaderboard = new menuItem("LEADERBOARD");
+        leaderboard.setOnActivate(() -> {
+			try {
+				this.openLeaderboard();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
         
-        MenuItem exitGame = new MenuItem("EXIT");
+        menuItem exitGame = new menuItem("EXIT");
         exitGame.setOnActivate(() -> System.exit(0));
 
         menuBox = new VBox(1,
@@ -72,140 +73,75 @@ public class gameMenu {
         getMenuItem(0).setActive(true);
 
         root.getChildren().addAll(menuBox);
-        //return menuBox;
-    }
-  
-    
-    /**
-     * Change Menu Item
-     */
-    
-   public void changeMenuItem(KeyEvent event)
-   {
-	   switch(event.getCode()) {
-       case UP:
-    	   if (this.currentItem > 0) {
-               this.getMenuItem(this.currentItem).setActive(false);
-               this.getMenuItem(--this.currentItem).setActive(true);
-           } break;   
-       case DOWN:
-    	   if (this.currentItem < menuBox.getChildren().size() - 1) {
-               this.getMenuItem(this.currentItem).setActive(false);
-               this.getMenuItem(++this.currentItem).setActive(true);
-           }  break; 
-       case ENTER:
-    	   	   this.getMenuItem(this.currentItem).activate();
-    	   	   break;
-       default:
-		break;
-    	   }
-   }
-    
-   /**
-    * Get Menu Item (For highlighting)
-    */
-   
-    private MenuItem getMenuItem(int index) {
-        return (MenuItem)this.menuBox.getChildren().get(index);
     }
     
-    /**
-     * Menu Item class
-     */
+	//Function to run game   
+	private void runGame() {
+	    	
+		setBackground();
+	    	
+	    	//To do:Set up difficulies, levels and etc.
+	}
+	    
+	//Function to open options
+	private void openOptions() {
+	    	
+		setBackground();
+	
+	    	//To do:Set up options menu
+	}
+	
+	//Function to open leaderboard  
+	private void openLeaderboard() throws IOException {
+	    	
+		setBackground();
+	
+	    	//To do:Set up Leaderboard
+		leaderboard leaderboard = new leaderboard(this.root, 0);
+    	leaderboard.getLeaderboard();
+    	leaderboard.createMenu(root);
 
-    static class MenuItem extends HBox {
-    	 private menuChooser c1 = new menuChooser(), c2 = new menuChooser();
-        private Text text;
-        private Runnable script;
+    	Scene scene = this.root.getScene();
+    	Stage theStage = (Stage) scene.getWindow();
 
-        public MenuItem(String name) {
-            super(15);
-            setAlignment(Pos.BASELINE_LEFT);
+    	theStage.sizeToScene();
+    	theStage.setResizable(false);
 
-            text = new Text(name);
-            text.setFont(FONT);
-            text.setEffect(new GaussianBlur(2)); //!!! 
+    	scene.removeEventHandler(KeyEvent.KEY_PRESSED, changeItemHandler);
+    	scene.addEventHandler(KeyEvent.KEY_PRESSED, leaderboard.changeItemHandler);
+	}
+    
+	//Function to change menu item
+	public void changeMenuItem(KeyEvent event) {
+		switch(event.getCode()) {
+		case UP:
+			if (this.currentItem > 0) {
+				this.getMenuItem(this.currentItem).setActive(false);
+				this.getMenuItem(--this.currentItem).setActive(true);
+			} break;   
+		case DOWN:
+			if (this.currentItem < menuBox.getChildren().size() - 1) {
+				this.getMenuItem(this.currentItem).setActive(false);
+				this.getMenuItem(++this.currentItem).setActive(true);
+			} break; 
+		case ENTER:
+			this.getMenuItem(this.currentItem).activate();
+			break;
+		default:
+			break;
+		}
+	}
 
-            getChildren().addAll(c1, text, c2);
-            setActive(false);
-        }
-
-        public void setActive(boolean b) {
-            c1.setVisible(b);
-            c2.setVisible(b);
-            text.setFill(b ? Color.GREEN : Color.GREY);
-        }
-
-        public void setOnActivate(Runnable r) {
-            script = r;
-        }
-
-        public void activate() {
-            if (script != null)
-                script.run();
-        }
+	//Highlighting Menu item
+    private menuItem getMenuItem(int index) {
+        return (menuItem)this.menuBox.getChildren().get(index);
     }
     
-    /**
-     * Menu Chooser 
-     */
-
-    public static class menuChooser extends Circle {
-        public menuChooser() {
-
-        	this.setRadius(10);
-            Image img = new Image("file:src/sample/images/ball.png");
-            this.setFill(new ImagePattern(img));
-            
-            setEffect(new GaussianBlur(2));
-        }
-    }
-    
-    /**
-     * Run Game From this menu
-     */
-    
-    private void runGame()
-    {
-    	this.root.getChildren().clear();
-
-    	Rectangle bg = new Rectangle(1225, 600);
-    	Image background = new Image("file:src/sample/images/start.png");
-    	bg.setFill(new ImagePattern(background));
-    	this.root.getChildren().add(bg);
+    //Function to set a background
+    private void setBackground() {
     	
-    	//Set up difficulies, levels and etc.
+	this.root.getChildren().clear();
+	this.root.getChildren().add(backgroundRendered);
     }
     
-    /**
-     * Open Options Menu
-     */
-    
-    private void openOptions()
-    {
-    	this.root.getChildren().clear();
-
-    	Rectangle bg = new Rectangle(1225, 600);
-    	Image background = new Image("file:src/sample/images/start.png");
-    	bg.setFill(new ImagePattern(background));
-    	this.root.getChildren().add(bg);
-
-    	//Set up options menu
-    }
-    
-    /**
-     * Open Leaderboard
-     */
-    
-    private void openLeaderboard() 
-    {
-    	this.root.getChildren().clear();
-
-    	Rectangle bg = new Rectangle(1225, 600);
-    	Image background = new Image("file:src/sample/images/start.png");
-    	bg.setFill(new ImagePattern(background));
-    	this.root.getChildren().add(bg);
-
-    	//Set up Leaderboard
-    }
 }

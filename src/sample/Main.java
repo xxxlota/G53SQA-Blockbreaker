@@ -5,7 +5,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -16,14 +15,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage theStage) throws Exception{
+
+    	//Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
     	
     	//Setting window name 
-    	
-    	//Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         theStage.setTitle( "Block Buster" );
     	
         //Creating canvas to pass the image and the game to
-    	Group root = new Group();
+    	final Group root = new Group();
         Scene theScene = new Scene( root );
         theStage.setScene( theScene );
         
@@ -34,7 +33,7 @@ public class Main extends Application {
         root.getChildren().add( background );
         
         //Implementing Game Menu on a starting screen
-    	gameMenu gameMenu = new gameMenu(root, Color.WHITE, Color.CADETBLUE, Color.SADDLEBROWN);
+    	gameMenu gameMenu = new gameMenu(root);
     	gameMenu.createMenu(root);
     	theScene.addEventHandler(KeyEvent.KEY_PRESSED, gameMenu.changeItemHandler);
     	
