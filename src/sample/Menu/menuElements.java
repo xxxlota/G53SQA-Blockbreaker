@@ -1,6 +1,5 @@
 package sample.Menu;
 
-
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -29,7 +28,7 @@ public class menuElements {
 		public background() {
 			this.setWidth(1225);
 			this.setHeight(600);
-	    	Image backgroundImage = new Image("file:src/sample/images/start.png");
+	    	Image backgroundImage = new Image("file:src/sample/SystemElements/Images/start.png");
 	    	this.setFill(new ImagePattern(backgroundImage));
 		}
 		
@@ -99,7 +98,7 @@ public class menuElements {
 		//Constructor
         public menuChooser() {
         	this.setRadius(10);
-            Image img = new Image("file:src/sample/images/ball.png");
+            Image img = new Image("file:src/sample/SystemElements/Images/ball.png");
             this.setFill(new ImagePattern(img));
             setEffect(new GaussianBlur(2));
         }

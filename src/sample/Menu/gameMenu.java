@@ -1,5 +1,7 @@
 package sample.Menu;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -9,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.Menu.menuElements.background;
+import sample.Menu.menuElements.leaderboardItem;
 import sample.Menu.menuElements.menuItem;
 
 public class gameMenu {
@@ -42,7 +45,7 @@ public class gameMenu {
      */
     
     //Function to create a menu
-    public void createMenu(Group root) {
+    public void createMenu(Group root, boolean showHighScoreBool) throws IOException {
         menuItem startGame = new menuItem("PLAY");
         startGame.setOnActivate(() -> this.runGame());
         
@@ -71,8 +74,32 @@ public class gameMenu {
         menuBox.setTranslateY(30);
         
         getMenuItem(0).setActive(true);
-
+        
+        if(showHighScoreBool) showHighScore();
+        
         root.getChildren().addAll(menuBox);
+    }
+    
+    //Function to show realtime high score 
+    private void showHighScore() throws IOException {
+    	
+    	BufferedReader reader = new BufferedReader(new FileReader("src/sample/SystemElements/Textfiles/Leaderboard.txt"));
+    	
+    	VBox leaderboardBox = new VBox();
+    	
+    	leaderboardItem highScoreItem = new leaderboardItem("Current High Score:");
+    	leaderboardBox.getChildren().add(highScoreItem);
+    	
+    	String currentHighString = reader.readLine();
+    	String[] scoreStorage = currentHighString.split(" ", 2);
+    	leaderboardItem leaderboardItem = new leaderboardItem(scoreStorage[1]);
+    	leaderboardBox.getChildren().add(leaderboardItem);
+
+        leaderboardBox.setTranslateX(800);
+        leaderboardBox.setTranslateY(30);
+
+        root.getChildren().addAll(leaderboardBox);
+        reader.close();
     }
     
 	//Function to run game   

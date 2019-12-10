@@ -19,7 +19,6 @@ import sample.Menu.menuElements.menuItem;
 import sample.Menu.menuElements.background;
 import sample.Menu.menuElements.leaderboardItem;
 
-
 public class leaderboard {
 	
 	
@@ -27,7 +26,6 @@ public class leaderboard {
     public VBox leaderboardBox;
     private int currentItem;
 	private Group root;
-	BufferedReader reader;
 	private background backgroundRendered;
 	
 	TextArea results;
@@ -44,20 +42,26 @@ public class leaderboard {
     	this.currentItem = 0;
     	this.menuBox = new VBox();
     	
-    	reader = new BufferedReader(new FileReader("src/sample/Leaderboard.txt"));
-    	
     	changeItemHandler = new EventHandler<KeyEvent>() {  
             public void handle(KeyEvent event) { 
             	changeMenuItem(event);
             }
         };
+        
+        scoresArray = new int[16];
     }
 
 	//Function to create a menu
 	public void createMenu(Group root) throws IOException {
 	 	   
 	   	menuItem gotoMenu = new menuItem("RETURN");
-	   	gotoMenu.setOnActivate(() -> this.returnToMain());
+	   	gotoMenu.setOnActivate(() -> {
+			try {
+				this.returnToMain();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		});
 	   	
         menuItem clear = new menuItem("CLEAR LEADERBOARD");
         clear.setOnActivate(() -> {
@@ -104,11 +108,13 @@ public class leaderboard {
 	    	   }
 	}
 	
+	//Function that highlights chosen menu option
 	private menuItem getMenuItem(int index) {
 		
         return (menuItem)this.menuBox.getChildren().get(index);
     }
 	
+	//Function to clear leaderboard file and the leaderboard itself
 	private void clearLeaderboard() throws IOException {
 		
     	this.writeScoresToFile(0, false);
@@ -120,10 +126,7 @@ public class leaderboard {
         this.showScores();
     }
     
-    /**
-     * Adds score to a leaderboard scores arrays. Never used on its own, only with writing to a file
-     */
-    
+    //Function to add the score to a leaderboard
     private void addScore(int score) {
     	
     	for(int i = 14; i >=0; i--)
@@ -171,13 +174,11 @@ public class leaderboard {
     	}
     	printWriter.close();
     }
-    
-    
- 
  
  	//Function to create a leaderboard
     private void showScores() throws IOException {
     	
+    	BufferedReader reader = new BufferedReader(new FileReader("src/sample/SystemElements/Textfiles/Leaderboard.txt"));
     	VBox leaderboardBox = new VBox();
     	for( int i=0; i < 15; i++) {
     		leaderboardItem leaderboardItem = new leaderboardItem(reader.readLine());
@@ -188,13 +189,31 @@ public class leaderboard {
         leaderboardBox.setTranslateY(30);
 
         root.getChildren().addAll(leaderboardBox);
+        reader.close();
     }
     
     
 	//Function to read all scores from leaderboard file and store them into array
-    public void getLeaderboard() {
+    public void getLeaderboard() throws IOException {
     	
-    	//To do: implement method of replacing scores in leaderboard
+    	BufferedReader reader = new BufferedReader(new FileReader("src/sample/SystemElements/Textfiles/Leaderboard.txt"));
+    	for(int i = 0; i < 15; i++)
+		{
+	        String var = reader.readLine();
+	        boolean empty = (var.contains("-") ? true : false);
+	        
+	        if(empty)
+	        {
+	        	scoresArray[i] = 0;
+	        }
+	        else
+	        {
+	        	String[] parts = var.split(" ", 2);
+	        	scoresArray[i] = Integer.parseInt(parts[1]);
+	        	
+	        }
+		}
+    	reader.close();
     	
    }
 
@@ -208,7 +227,7 @@ public class leaderboard {
     }
     
 	//Function that returns to main menu
-    private void returnToMain() {
+    private void returnToMain() throws IOException {
     	
     	this.root.getChildren().clear();
         
@@ -216,7 +235,7 @@ public class leaderboard {
         Stage theStage = (Stage) scene.getWindow();
         
         gameMenu gameMenu = new gameMenu(root);
-        gameMenu.createMenu(root);
+        gameMenu.createMenu(root, true);
         
         scene.removeEventHandler(KeyEvent.KEY_PRESSED, changeItemHandler);
     	scene.addEventHandler(KeyEvent.KEY_PRESSED, gameMenu.changeItemHandler);
