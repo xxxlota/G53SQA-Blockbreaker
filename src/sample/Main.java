@@ -1,18 +1,24 @@
 package sample;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-//import javafx.scene.media.Media;
+import javafx.scene.media.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import sample.Menu.gameMenu;
 
 public class Main extends Application {
 
+	public static MediaPlayer musicPlayer;
 
     @Override
     public void start(Stage theStage) throws Exception{
@@ -23,7 +29,25 @@ public class Main extends Application {
         theStage.setTitle( "Block Buster" );
     	
         //Setting background music
-        //Media musicFile = new Media("file:src/sample/SystemElements/Sounds/Background.mp3");
+        String path = "src/sample/SystemElements/Sounds/Background.mp3";  
+        Media musicFile = new Media(new File(path).toURI().toString());
+        musicPlayer = new MediaPlayer(musicFile);
+        musicPlayer.setAutoPlay(true);
+        
+        //Setting to play on repeat
+        musicPlayer.setOnEndOfMedia(new Runnable() {
+            public void run() {
+                musicPlayer.seek(Duration.ZERO);
+                musicPlayer.play();  
+            }
+        });
+        
+        
+        BufferedReader reader = new BufferedReader(new FileReader("src/sample/SystemElements/Textfiles/Settings.txt"));
+    	
+		String[] parts = reader.readLine().split(" ", 4);
+        reader.close();
+        musicPlayer.setVolume(Float.parseFloat(parts[2])/100);
         
         //Creating canvas to pass the image and the game to
     	final Group root = new Group();

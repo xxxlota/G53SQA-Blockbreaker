@@ -15,9 +15,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import sample.Menu.menuElements.menuItem;
-import sample.Menu.menuElements.background;
-import sample.Menu.menuElements.leaderboardItem;
+import sample.Menu.menuElements.*;
 
 public class leaderboard {
 	
@@ -219,7 +217,6 @@ public class leaderboard {
 
 	
 	//Function that returns back to gameEndMenu with ability to proceed to the next stage if succeeded to pass, or restart if lost
-    @SuppressWarnings("unused")
 	private void returnBack(int level, int lifesLeft) {
     	
     	//To do: implement different leaderboard return mechanics, such as returning to main menu or to a mid-game menu

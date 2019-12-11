@@ -10,9 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import sample.Menu.menuElements.background;
-import sample.Menu.menuElements.leaderboardItem;
-import sample.Menu.menuElements.menuItem;
+import sample.Menu.menuElements.*;
 
 public class gameMenu {
 
@@ -50,7 +48,13 @@ public class gameMenu {
         startGame.setOnActivate(() -> this.runGame());
         
         menuItem options = new menuItem("OPTIONS");
-        options.setOnActivate(() -> this.openOptions());
+        options.setOnActivate(() -> {
+			try {
+				this.openOptions();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		});
         
         menuItem leaderboard = new menuItem("LEADERBOARD");
         leaderboard.setOnActivate(() -> {
@@ -111,11 +115,22 @@ public class gameMenu {
 	}
 	    
 	//Function to open options
-	private void openOptions() {
+	private void openOptions() throws IOException {
 	    	
 		setBackground();
-	
-	    	//To do:Set up options menu
+
+		options options = new options(this.root);
+    	options.createMenu(root);
+
+    	Scene scene = this.root.getScene();
+    	Stage theStage = (Stage) scene.getWindow();
+
+    	theStage.sizeToScene();
+    	theStage.setResizable(false);
+
+    	scene.removeEventHandler(KeyEvent.KEY_PRESSED, changeItemHandler);
+    	scene.addEventHandler(KeyEvent.KEY_PRESSED, options.changeItemHandler);
+    	
 	}
 	
 	//Function to open leaderboard  
@@ -123,7 +138,6 @@ public class gameMenu {
 	    	
 		setBackground();
 	
-	    	//To do:Set up Leaderboard
 		leaderboard leaderboard = new leaderboard(this.root, 0);
     	leaderboard.getLeaderboard();
     	leaderboard.createMenu(root);
