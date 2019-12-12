@@ -1,24 +1,18 @@
 package sample;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.media.*;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import sample.Menu.gameMenu;
+import sample.Menu.GameMenu;
+import sample.Menu.MusicPlayer;
 
 public class Main extends Application {
-
-	public static MediaPlayer musicPlayer;
+	
+	public MusicPlayer musicPlayerObject;
 
     @Override
     public void start(Stage theStage) throws Exception{
@@ -29,48 +23,50 @@ public class Main extends Application {
         theStage.setTitle( "Block Buster" );
     	
         //Setting background music
-        String path = "src/sample/SystemElements/Sounds/Background.mp3";  
-        Media musicFile = new Media(new File(path).toURI().toString());
-        musicPlayer = new MediaPlayer(musicFile);
-        musicPlayer.setAutoPlay(true);
+        musicPlayerObject = new MusicPlayer("Background.mp3", true);
+        playMusic();
         
-        //Setting to play on repeat
-        musicPlayer.setOnEndOfMedia(new Runnable() {
-            public void run() {
-                musicPlayer.seek(Duration.ZERO);
-                musicPlayer.play();  
-            }
-        });
+        //Creating scene for background and setting screen size. 
+        Group root = new Group();
+        Scene theScene = new Scene( root, 1500, 1000 );
+        theScene.getStylesheets().add("file:src/sample/Main.css");
         
+        //Note: Would be a great practice to make it stretch according to the screen
+        //Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        //Scene theScene = new Scene( root, screenBounds.getMaxX(), screenBounds.getMaxY() );
         
-        BufferedReader reader = new BufferedReader(new FileReader("src/sample/SystemElements/Textfiles/Settings.txt"));
-    	
-		String[] parts = reader.readLine().split(" ", 4);
-        reader.close();
-        musicPlayer.setVolume(Float.parseFloat(parts[2])/100);
-        
-        //Creating canvas to pass the image and the game to
-    	final Group root = new Group();
-        Scene theScene = new Scene( root );
-        theStage.setScene( theScene );
         
         //Setting background image
-        Rectangle background = new Rectangle(1225, 600);
-        Image backgroundImage = new Image("file:src/sample/SystemElements/Images/start.png");
-        background.setFill(new ImagePattern(backgroundImage));
-        root.getChildren().add( background );
+        Image backgroundImage = new Image("file:src/sample/SystemElements/Images/Start.png");
+        theScene.setFill(new ImagePattern(backgroundImage));
+        theStage.setScene( theScene );
         
         //Implementing Game Menu on a starting screen
-    	gameMenu gameMenu = new gameMenu(root);
+    	GameMenu gameMenu = new GameMenu(root);
     	gameMenu.createMenu(root, true);
     	theScene.addEventHandler(KeyEvent.KEY_PRESSED, gameMenu.changeItemHandler);
     	
     	//Passing Game Menu to the window and making it visible
     	theStage.setResizable(false);
         theStage.sizeToScene();
-        theStage.show();
+        theStage.show(); 
     }
-
+    
+    public MusicPlayer getMusicPlayerObject() {
+    	return musicPlayerObject;
+    }
+    
+    public void changeVolume(float volume) {
+    	musicPlayerObject.setVolumeFunction(volume);
+    }
+    
+    public void stopMusic() {
+    	musicPlayerObject.stopPlaying();
+    }
+    
+    public void playMusic() {
+    	musicPlayerObject.beginPlaying();
+    }
 
     public static void main(String[] args) {
         launch(args);

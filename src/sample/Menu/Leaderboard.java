@@ -15,16 +15,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import sample.Menu.menuElements.*;
+import sample.Menu.MenuElements.*;
 
-public class leaderboard {
+public class Leaderboard {
 	
 	
 	public VBox menuBox;
     public VBox leaderboardBox;
     private int currentItem;
 	private Group root;
-	private background backgroundRendered;
 	
 	TextArea results;
 
@@ -33,9 +32,8 @@ public class leaderboard {
 	public EventHandler<KeyEvent> changeItemHandler;
 	
 	//Constructor
-    public leaderboard(Group root, int lifesLeft) throws FileNotFoundException {
+    public Leaderboard(Group root, int lifesLeft) throws FileNotFoundException {
     	
-    	this.backgroundRendered = new background();
     	this.root = root;
     	this.currentItem = 0;
     	this.menuBox = new VBox();
@@ -74,7 +72,7 @@ public class leaderboard {
         menuBox = new VBox(1,
                 clear,
                 gotoMenu);
-        menuBox.setTranslateX(10);
+        menuBox.setTranslateX(50);
         menuBox.setTranslateY(30);
         
         getMenuItem(0).setActive(true);
@@ -118,8 +116,6 @@ public class leaderboard {
     	this.writeScoresToFile(0, false);
         this.root.getChildren().clear();
         
-        this.setBackground();
-        
         this.createMenu(root);
         this.showScores();
     }
@@ -147,26 +143,21 @@ public class leaderboard {
     	BufferedWriter writer = new BufferedWriter(new FileWriter("src/sample/Leaderboard.txt"));
 	    PrintWriter printWriter = new PrintWriter(writer);
 	    
-    	if(write)
-    	{
+    	if(write) {
 			addScore(score);
 			
-		    for(int i = 1; i <= 15; i++)
-    		{	
-		    	if(scoresArray[i-1] > 0)
-		    	{
+		    for(int i = 1; i <= 15; i++) {	
+		    	
+		    	if(scoresArray[i-1] > 0) {
 		    		printWriter.printf("" + i + ". " + scoresArray[i-1]);
 		    	}
-		    	else
-		    	{
+		    	else {
 		    		printWriter.printf("" + i + ". ---\n");
 		    	}
     		}
     	}
-    	else
-    	{
-    		for(int i = 1; i <= 15; i++)
-    		{
+    	else {
+    		for(int i = 1; i <= 15; i++) {
     			printWriter.printf("" + i + ". ---\n");
     		}
     	}
@@ -183,7 +174,7 @@ public class leaderboard {
     		leaderboardBox.getChildren().add(leaderboardItem);
         }
 
-        leaderboardBox.setTranslateX(800);
+        leaderboardBox.setTranslateX(1050);
         leaderboardBox.setTranslateY(30);
 
         root.getChildren().addAll(leaderboardBox);
@@ -200,19 +191,15 @@ public class leaderboard {
 	        String var = reader.readLine();
 	        boolean empty = (var.contains("-") ? true : false);
 	        
-	        if(empty)
-	        {
+	        if(empty) {
 	        	scoresArray[i] = 0;
 	        }
-	        else
-	        {
+	        else {
 	        	String[] parts = var.split(" ", 2);
 	        	scoresArray[i] = Integer.parseInt(parts[1]);
-	        	
 	        }
 		}
     	reader.close();
-    	
    }
 
 	
@@ -231,7 +218,7 @@ public class leaderboard {
         Scene scene = this.root.getScene();
         Stage theStage = (Stage) scene.getWindow();
         
-        gameMenu gameMenu = new gameMenu(root);
+        GameMenu gameMenu = new GameMenu(root);
         gameMenu.createMenu(root, true);
         
         scene.removeEventHandler(KeyEvent.KEY_PRESSED, changeItemHandler);
@@ -239,12 +226,5 @@ public class leaderboard {
     	
     	theStage.setResizable(false);
         theStage.sizeToScene();
-    }
-    
-    //Function to set a background
-    private void setBackground() {
-    	
-	this.root.getChildren().clear();
-	this.root.getChildren().add(backgroundRendered);
     }
 }

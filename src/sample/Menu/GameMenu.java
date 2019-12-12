@@ -10,29 +10,29 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import sample.Menu.menuElements.*;
+import sample.Menu.MenuElements.*;
 
-public class gameMenu {
+public class GameMenu {
 
+	public MusicPlayer musicPlayerObject;
+	
     public VBox menuBox;
     private int currentItem;
 	private Group root;
-	private background backgroundRendered;
 	
 	public EventHandler<KeyEvent> changeItemHandler;
 
 	//Constructor
-    public gameMenu(Group root)
-    {
+    public GameMenu(Group root) throws IOException {
+    	
     	this.root = root;
     	this.currentItem = 0;
     	this.menuBox = new VBox();
-    	
-    	backgroundRendered = new background();
-    	this.setBackground();
-    	
+        
     	changeItemHandler = new EventHandler<KeyEvent>() {  
+    		
             public void handle(KeyEvent event) { 
+            	
             	changeMenuItem(event);
             }
         };
@@ -44,6 +44,9 @@ public class gameMenu {
     
     //Function to create a menu
     public void createMenu(Group root, boolean showHighScoreBool) throws IOException {
+    	
+    	this.root.getChildren().clear();
+    	
         menuItem startGame = new menuItem("PLAY");
         startGame.setOnActivate(() -> this.runGame());
         
@@ -74,7 +77,7 @@ public class gameMenu {
                 leaderboard,
                 exitGame);
         menuBox.setAlignment(Pos.TOP_LEFT);
-        menuBox.setTranslateX(10);
+        menuBox.setTranslateX(50);
         menuBox.setTranslateY(30);
         
         getMenuItem(0).setActive(true);
@@ -99,7 +102,7 @@ public class gameMenu {
     	leaderboardItem leaderboardItem = new leaderboardItem(scoreStorage[1]);
     	leaderboardBox.getChildren().add(leaderboardItem);
 
-        leaderboardBox.setTranslateX(800);
+        leaderboardBox.setTranslateX(1050);
         leaderboardBox.setTranslateY(30);
 
         root.getChildren().addAll(leaderboardBox);
@@ -108,8 +111,8 @@ public class gameMenu {
     
 	//Function to run game   
 	private void runGame() {
-	    	
-		setBackground();
+		
+		this.root.getChildren().clear();
 	    	
 	    	//To do:Set up difficulies, levels and etc.
 	}
@@ -117,9 +120,9 @@ public class gameMenu {
 	//Function to open options
 	private void openOptions() throws IOException {
 	    	
-		setBackground();
+		this.root.getChildren().clear();
 
-		options options = new options(this.root);
+		Settings options = new Settings(this.root);
     	options.createMenu(root);
 
     	Scene scene = this.root.getScene();
@@ -135,10 +138,10 @@ public class gameMenu {
 	
 	//Function to open leaderboard  
 	private void openLeaderboard() throws IOException {
-	    	
-		setBackground();
+		
+		this.root.getChildren().clear();
 	
-		leaderboard leaderboard = new leaderboard(this.root, 0);
+		Leaderboard leaderboard = new Leaderboard(this.root, 0);
     	leaderboard.getLeaderboard();
     	leaderboard.createMenu(root);
 
@@ -154,6 +157,7 @@ public class gameMenu {
     
 	//Function to change menu item
 	public void changeMenuItem(KeyEvent event) {
+		
 		switch(event.getCode()) {
 		case UP:
 			if (this.currentItem > 0) {
@@ -175,14 +179,26 @@ public class gameMenu {
 
 	//Highlighting Menu item
     private menuItem getMenuItem(int index) {
+    	
         return (menuItem)this.menuBox.getChildren().get(index);
     }
     
-    //Function to set a background
-    private void setBackground() {
+    //Function to change music volume
+    public void changeVolume(float volume) {
     	
-	this.root.getChildren().clear();
-	this.root.getChildren().add(backgroundRendered);
+    	musicPlayerObject.setVolumeFunction(volume);
+    }
+    
+    //Function to stop music
+    public void stopMusic() {
+    	
+    	musicPlayerObject.stopPlaying();
+    }
+    
+    //Function to play music
+    public void playMusic() {
+    	
+    	musicPlayerObject.beginPlaying();
     }
     
 }

@@ -1,9 +1,9 @@
 package sample.Game;
 
-public class gameManager {
+public class GameManager {
 
 	//Constructor 
-	gameManager()
+	GameManager()
 	{
 		
 	}
