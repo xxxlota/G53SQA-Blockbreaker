@@ -14,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.Menu.MenuElements.*;
+import sample.Menu.Settings.pointerInt;
 
 
 public class BrickColor {
@@ -27,13 +28,13 @@ public class BrickColor {
 	private int colorIdVariable;
 
 	//Constructor
-    public BrickColor(Group root, int colorId)
+    public BrickColor(Group root, pointerInt brickIdPointer)
     {
     	this.root = root;
     	this.currentItem = 0;
     	this.menuBox = new VBox();
     	
-    	this.colorIdVariable = colorId;
+    	this.colorIdVariable = brickIdPointer.value;
     		
     	changeItemHandler = new EventHandler<KeyEvent>() {  
             public void handle(KeyEvent event) { 
@@ -132,7 +133,7 @@ public class BrickColor {
         menuItem rainbow = new menuItem("RAINBOW");
         rainbow.setOnActivate(() -> {
 			try {
-				returnBack(8);
+				returnBack(1); //Value: red. Currently unavailable
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

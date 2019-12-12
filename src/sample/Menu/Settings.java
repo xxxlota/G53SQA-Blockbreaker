@@ -39,8 +39,6 @@ public class Settings {
 		//Constructor
 	    public Settings(Group root) throws IOException {
 	    	
-	    	formatter = new DecimalFormat("0.00");
-	    	
 	    	this.root = root;
 	    	this.currentItem = 0;
 	    	this.menuBox = new VBox();
@@ -263,7 +261,7 @@ public class Settings {
 	    	Scene scene = this.root.getScene();
 		    Stage theStage = (Stage) scene.getWindow();
 		        
-		    PaddleColor paddleColorMenu = new PaddleColor(root, this.paddleColor.value);
+		    PaddleColor paddleColorMenu = new PaddleColor(root, this.paddleColor);
 		    paddleColorMenu.createMenu(root);
 		        
 		    scene.removeEventHandler(KeyEvent.KEY_PRESSED, changeItemHandler);
@@ -284,7 +282,7 @@ public class Settings {
 			Scene scene = this.root.getScene();
 		    Stage theStage = (Stage) scene.getWindow();
 		        
-		    BrickColor brickColorMenu = new BrickColor(root, this.brickColor.value);
+		    BrickColor brickColorMenu = new BrickColor(root, this.brickColor);
 		    brickColorMenu.createMenu(root);
 		        
 		    scene.removeEventHandler(KeyEvent.KEY_PRESSED, changeItemHandler);

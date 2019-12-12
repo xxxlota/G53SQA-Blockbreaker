@@ -14,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.Menu.MenuElements.*;
+import sample.Menu.Settings.pointerInt;
 
 
 public class PaddleColor {
@@ -27,13 +28,13 @@ public class PaddleColor {
 	private int colorIdVariable;
 
 	//Constructor
-    public PaddleColor(Group root, int colorId)
+    public PaddleColor(Group root, pointerInt colorIdPointer)
     {
     	this.root = root;
     	this.currentItem = 0;
     	this.menuBox = new VBox();
     	
-    	this.colorIdVariable = colorId;
+    	this.colorIdVariable = colorIdPointer.value;
     		
     	changeItemHandler = new EventHandler<KeyEvent>() {  
             public void handle(KeyEvent event) { 
