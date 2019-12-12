@@ -57,6 +57,6 @@ public class MusicPlayer {
 	//Function to change volume
 	public void setVolumeFunction(float volume) {
 		
-		tempMusicPlayer.setVolume(volume);
+		MusicPlayer.tempMusicPlayer.setVolume(volume);
 	}
 }

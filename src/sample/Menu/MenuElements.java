@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import sample.Main;
 import sample.Menu.Settings.pointerFloat;
 //import sample.Menu.Settings.pointerInt;
 
@@ -163,8 +164,8 @@ public class MenuElements {
 	        this.valueProperty().addListener(new ChangeListener<Number>() {
 	            public void changed(ObservableValue<? extends Number> ov,
 	                Number oldValue, Number newValue) {
-	            	
 	            	pointer.value = newValue.floatValue();
+	            	Main.musicPlayerObject.setVolumeFunction(pointer.value / 100);
 	            }
 	        });
 		}

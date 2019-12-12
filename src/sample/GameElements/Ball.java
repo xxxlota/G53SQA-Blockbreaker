@@ -2,8 +2,8 @@ package sample.GameElements;
 
 import javafx.scene.shape.Circle;
 
-public class ball extends Circle{
+public class Ball extends Circle{
 	
-	public ball(int radius) {};
+	public Ball(int radius) {};
 	
 }

@@ -1,5 +1,5 @@
 package sample.GameElements;
 
-public class field {
-
+public class Score {
+	
 }

@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import sample.Main;
 import sample.Menu.MenuElements.*;
 
 public class Settings {
@@ -73,10 +74,24 @@ public class Settings {
 	    	//menuItem brickColorChanger = new menuItem("", true);
 	    	
 	    	menuItem paddleColorLabel = new menuItem("CHANGE PADDLE COLOR");
-	    	paddleColorLabel.setOnActivate(() -> this.paddleColoring());
+	    	paddleColorLabel.setOnActivate(() -> {
+				try {
+					this.paddleColoring();
+				} catch (IOException e2) {
+					
+					e2.printStackTrace();
+				}
+			});
 	    	
 	    	menuItem brickColorLabel = new menuItem("CHANGE BRICK COLOR");
-	    	brickColorLabel.setOnActivate(() -> this.brickColoring());
+	    	brickColorLabel.setOnActivate(() -> {
+				try {
+					this.brickColoring();
+				} catch (IOException e2) {
+					
+					e2.printStackTrace();
+				}
+			});
 	    	
 	    	menuItem musicVolumeLabel = new menuItem("MUSIC VOLUME:", false);
 	    	
@@ -206,7 +221,7 @@ public class Settings {
 	    //Function to change settings and store into textfile
 		private void saveSettings() throws IOException {
 			
-			//To do: change volume
+			Main.musicPlayerObject.setVolumeFunction(musicVolume.value / 100);
 
 			BufferedWriter writer = new BufferedWriter(new FileWriter("src/sample/SystemElements/Textfiles/Settings.txt"));
 
@@ -222,7 +237,7 @@ public class Settings {
 	    //Function to restore default settings
 	    private void restoreDefaults() throws IOException {
 	    	
-	    	//To do: change volume
+	    	Main.musicPlayerObject.setVolumeFunction((float) 0.4);
 	    	
 	    	musicVolumeSlider.setValue(40);
 	    	effectsVolumeSlider.setValue(40);
@@ -238,47 +253,55 @@ public class Settings {
 	    }
 	    
 	    //Function that oppens paddle color menu
-	    private void paddleColoring() {
-		
-		   this.root.getChildren().clear();
-		   
-		   Scene scene = this.root.getScene();
-	       Stage theStage = (Stage) scene.getWindow();
-	        
-	       PaddleColor paddleColorMenu = new PaddleColor(root, this.paddleColor.value);
-	       paddleColorMenu.createMenu(root);
-	        
-	       scene.removeEventHandler(KeyEvent.KEY_PRESSED, changeItemHandler);
-	       scene.addEventHandler(KeyEvent.KEY_PRESSED, paddleColorMenu.changeItemHandler);
+	    private void paddleColoring() throws IOException {
 	    	
-	       theStage.setResizable(false);
-	       theStage.sizeToScene();
+	    	this.getSettings();
+	    	this.saveSettings();
+		
+	    	this.root.getChildren().clear();
+		   
+	    	Scene scene = this.root.getScene();
+		    Stage theStage = (Stage) scene.getWindow();
+		        
+		    PaddleColor paddleColorMenu = new PaddleColor(root, this.paddleColor.value);
+		    paddleColorMenu.createMenu(root);
+		        
+		    scene.removeEventHandler(KeyEvent.KEY_PRESSED, changeItemHandler);
+		    scene.addEventHandler(KeyEvent.KEY_PRESSED, paddleColorMenu.changeItemHandler);
+		  
+		    theStage.setResizable(false);
+		    theStage.sizeToScene();
 		}
 	   
 	    //Function that opens brick color menu
-	    private void brickColoring() {
+	    private void brickColoring() throws IOException {
 		   
-		   this.root.getChildren().clear();
-		   
-		   Scene scene = this.root.getScene();
-	       Stage theStage = (Stage) scene.getWindow();
-	        
-	       BrickColor brickColorMenu = new BrickColor(root, this.brickColor.value);
-	       brickColorMenu.createMenu(root);
-	        
-	       scene.removeEventHandler(KeyEvent.KEY_PRESSED, changeItemHandler);
-	       scene.addEventHandler(KeyEvent.KEY_PRESSED, brickColorMenu.changeItemHandler);
+	    	this.getSettings();
+	    	this.saveSettings();
 	    	
-	       theStage.setResizable(false);
-	       theStage.sizeToScene();
+	    	this.root.getChildren().clear();
+		   
+			Scene scene = this.root.getScene();
+		    Stage theStage = (Stage) scene.getWindow();
+		        
+		    BrickColor brickColorMenu = new BrickColor(root, this.brickColor.value);
+		    brickColorMenu.createMenu(root);
+		        
+		    scene.removeEventHandler(KeyEvent.KEY_PRESSED, changeItemHandler);
+		    scene.addEventHandler(KeyEvent.KEY_PRESSED, brickColorMenu.changeItemHandler);
+		    	
+		    theStage.setResizable(false);
+		    theStage.sizeToScene();
 		}
     
 	    //Function that returns to main
 	    private void returnToMain() throws IOException {
 	    	
-	    	this.root.getChildren().clear();
+	    	this.getSettings();
+	    	this.saveSettings();
 	    	
-	        
+	    	this.root.getChildren().clear();
+     
 	        Scene scene = this.root.getScene();
 	        Stage theStage = (Stage) scene.getWindow();
 	        

@@ -12,7 +12,7 @@ import sample.Menu.MusicPlayer;
 
 public class Main extends Application {
 	
-	public MusicPlayer musicPlayerObject;
+	public static MusicPlayer musicPlayerObject;
 
     @Override
     public void start(Stage theStage) throws Exception{
@@ -20,11 +20,11 @@ public class Main extends Application {
     	//Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
     	
     	//Setting window name 
-        theStage.setTitle( "Block Buster" );
+        theStage.setTitle( "BlockBreaker" );
     	
         //Setting background music
         musicPlayerObject = new MusicPlayer("Background.mp3", true);
-        playMusic();
+        musicPlayerObject.beginPlaying();
         
         //Creating scene for background and setting screen size. 
         Group root = new Group();
@@ -50,22 +50,6 @@ public class Main extends Application {
     	theStage.setResizable(false);
         theStage.sizeToScene();
         theStage.show(); 
-    }
-    
-    public MusicPlayer getMusicPlayerObject() {
-    	return musicPlayerObject;
-    }
-    
-    public void changeVolume(float volume) {
-    	musicPlayerObject.setVolumeFunction(volume);
-    }
-    
-    public void stopMusic() {
-    	musicPlayerObject.stopPlaying();
-    }
-    
-    public void playMusic() {
-    	musicPlayerObject.beginPlaying();
     }
 
     public static void main(String[] args) {
